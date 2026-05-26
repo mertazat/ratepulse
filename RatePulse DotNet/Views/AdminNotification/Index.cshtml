@@ -1,0 +1,75 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Bildirimler";
+    var logs = ViewBag.Logs as dynamic ?? new List<dynamic>();
+}
+
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+    <div class="xl:col-span-1">
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="font-semibold text-gray-700 mb-5">📢 Toplu Bildirim Gönder</h2>
+            <form method="post" action="/admin/notifications/broadcast">
+                <div class="mb-4">
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Başlık</label>
+                    <input type="text" name="Title" required
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                           placeholder="Bildirim başlığı" />
+                </div>
+                <div class="mb-6">
+                    <label class="block text-xs font-medium text-gray-500 mb-1">Mesaj</label>
+                    <textarea name="Body" required rows="4"
+                              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                              placeholder="Bildirim içeriği..."></textarea>
+                </div>
+                <button type="submit"
+                        class="w-full bg-indigo-600 text-white text-sm py-2.5 rounded-lg hover:bg-indigo-700 transition-colors font-medium">
+                    Tüm Kullanıcılara Gönder
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="xl:col-span-2">
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b">
+                <h2 class="font-semibold text-gray-700">Bildirim Geçmişi</h2>
+            </div>
+            <div class="divide-y divide-gray-100">
+                @foreach (var log in logs)
+                {
+                    <div class="px-6 py-4 flex items-start gap-4">
+                        <div class="mt-0.5">
+                            @if ((bool)log.Success)
+                            {
+                                <span class="text-green-500 text-lg">✅</span>
+                            }
+                            else
+                            {
+                                <span class="text-red-500 text-lg">❌</span>
+                            }
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-sm font-semibold text-gray-800">@log.Title</span>
+                                <span class="bg-indigo-100 text-indigo-700 text-xs px-2 py-0.5 rounded-full">@log.Type</span>
+                            </div>
+                            <p class="text-sm text-gray-500 truncate">@log.Body</p>
+                            <p class="text-xs text-gray-400 mt-1">
+                                @log.SentAt.ToString("dd/MM/yyyy HH:mm") —
+                                @(log.SentTo == "all" ? "Tüm kullanıcılar" : log.SentTo)
+                            </p>
+                        </div>
+                    </div>
+                }
+
+                @if (logs.Count == 0)
+                {
+                    <div class="text-center py-12 text-gray-400">
+                        <p class="text-4xl mb-2">📭</p>
+                        <p class="text-sm">Henüz bildirim gönderilmemiş.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

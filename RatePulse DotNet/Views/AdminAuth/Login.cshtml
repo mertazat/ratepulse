@@ -1,0 +1,92 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>RatePulse — Admin Giriş</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-auth-compat.js"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-900 to-indigo-700 min-h-screen flex items-center justify-center">
+
+<div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+    <div class="text-center mb-8">
+        <span class="text-5xl">📈</span>
+        <h1 class="text-2xl font-bold text-gray-800 mt-3">RatePulse Admin</h1>
+        <p class="text-gray-500 text-sm mt-1">Yönetici paneline giriş yapın</p>
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
+            ❌ @ViewBag.Error
+        </div>
+    }
+
+    <form id="loginForm" method="post" action="/admin/login">
+        <input type="hidden" name="idToken" id="idTokenInput" />
+
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">E-posta</label>
+            <input type="email" id="emailInput" required
+                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                   placeholder="admin@example.com" />
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Şifre</label>
+            <input type="password" id="passwordInput" required
+                   class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                   placeholder="••••••••" />
+        </div>
+
+        <div id="errorBox" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm"></div>
+
+        <button type="button" id="loginBtn"
+                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm">
+            Giriş Yap
+        </button>
+    </form>
+</div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDkJkaE8-vamMv-Nyn0mW1YgMZsek6Hy4U",
+        authDomain: "ratepulse-dbc32.firebaseapp.com",
+        projectId: "ratepulse-dbc32",
+        storageBucket: "ratepulse-dbc32.firebasestorage.app",
+        messagingSenderId: "990771149519",
+        appId: "1:990771149519:web:241ae36d01725de753d5ba",
+        measurementId: "G-923VDVYFK8"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+        const email = document.getElementById('emailInput').value;
+        const password = document.getElementById('passwordInput').value;
+        const errorBox = document.getElementById('errorBox');
+        const loginBtn = document.getElementById('loginBtn');
+
+        errorBox.classList.add('hidden');
+        loginBtn.textContent = 'Giriş yapılıyor...';
+        loginBtn.disabled = true;
+
+        try {
+            const cred = await firebase.auth().signInWithEmailAndPassword(email, password);
+            const idToken = await cred.user.getIdToken();
+            document.getElementById('idTokenInput').value = idToken;
+            document.getElementById('loginForm').submit();
+        } catch (err) {
+            errorBox.textContent = '❌ ' + (err.message || 'Giriş başarısız');
+            errorBox.classList.remove('hidden');
+            loginBtn.textContent = 'Giriş Yap';
+            loginBtn.disabled = false;
+        }
+    });
+</script>
+</body>
+</html>

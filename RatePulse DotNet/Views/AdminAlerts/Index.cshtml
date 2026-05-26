@@ -1,0 +1,81 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Alarmlar";
+    var alerts = ViewBag.Alerts as List<RatePulse.Models.Firestore.AlertModel> ?? new();
+    var userDict = ViewBag.UserDict as Dictionary<string, string> ?? new();
+    bool? activeFilter = ViewBag.ActiveFilter;
+}
+
+<div class="bg-white rounded-xl shadow-sm p-5 mb-6">
+    <div class="flex gap-3">
+        <a href="/admin/alerts" class="px-4 py-2 rounded-lg text-sm font-medium @(activeFilter == null ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200")">
+            Tümü
+        </a>
+        <a href="/admin/alerts?active=true" class="px-4 py-2 rounded-lg text-sm font-medium @(activeFilter == true ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200")">
+            Aktif
+        </a>
+        <a href="/admin/alerts?active=false" class="px-4 py-2 rounded-lg text-sm font-medium @(activeFilter == false ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200")">
+            Tetiklenenler
+        </a>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b flex justify-between items-center">
+        <h2 class="font-semibold text-gray-700">Alarmlar</h2>
+        <span class="text-sm text-gray-500">@alerts.Count kayıt</span>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+                <tr>
+                    <th class="px-6 py-3 text-left">Kullanıcı</th>
+                    <th class="px-6 py-3 text-left">Döviz Çifti</th>
+                    <th class="px-6 py-3 text-left">Hedef Kur</th>
+                    <th class="px-6 py-3 text-left">Yön</th>
+                    <th class="px-6 py-3 text-left">Durum</th>
+                    <th class="px-6 py-3 text-left">Oluşturma</th>
+                    <th class="px-6 py-3 text-left">Tetiklenme</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                @foreach (var alert in alerts)
+                {
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-3 text-xs text-gray-500">
+                            @(userDict.TryGetValue(alert.UserId, out var email) ? email : alert.UserId[..8] + "...")
+                        </td>
+                        <td class="px-6 py-3 font-semibold text-indigo-700">@alert.FromCurrency / @alert.ToCurrency</td>
+                        <td class="px-6 py-3 font-medium">@alert.TargetRate.ToString("F4")</td>
+                        <td class="px-6 py-3">
+                            <span class="@(alert.Direction == "above" ? "text-green-600" : "text-red-600") font-medium">
+                                @(alert.Direction == "above" ? "↑ Üstünde" : "↓ Altında")
+                            </span>
+                        </td>
+                        <td class="px-6 py-3">
+                            @if (alert.IsActive)
+                            {
+                                <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">Aktif</span>
+                            }
+                            else
+                            {
+                                <span class="bg-orange-100 text-orange-700 text-xs px-2 py-0.5 rounded-full font-medium">Tetiklendi</span>
+                            }
+                        </td>
+                        <td class="px-6 py-3 text-gray-500">@alert.CreatedAt.ToString("dd/MM/yy HH:mm")</td>
+                        <td class="px-6 py-3 text-gray-500">
+                            @(alert.TriggeredAt.HasValue ? alert.TriggeredAt.Value.ToString("dd/MM/yy HH:mm") : "—")
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (!alerts.Any())
+        {
+            <div class="text-center py-12 text-gray-400">
+                <p class="text-4xl mb-2">🔔</p>
+                <p class="text-sm">Alarm bulunamadı.</p>
+            </div>
+        }
+    </div>
+</div>

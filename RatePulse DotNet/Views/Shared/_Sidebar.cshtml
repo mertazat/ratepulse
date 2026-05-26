@@ -1,0 +1,49 @@
+@{
+    var currentPath = Context.Request.Path.Value ?? "";
+    string Active(string path) => currentPath.StartsWith(path) ? "bg-indigo-700 text-white" : "text-indigo-100 hover:bg-indigo-700 hover:text-white";
+}
+
+<aside class="w-64 bg-indigo-800 flex flex-col shrink-0">
+    <div class="px-6 py-5 border-b border-indigo-700">
+        <div class="flex items-center gap-2">
+            <span class="text-2xl">📈</span>
+            <span class="text-white font-bold text-lg">RatePulse</span>
+        </div>
+        <p class="text-indigo-300 text-xs mt-1">Admin Panel</p>
+    </div>
+
+    <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        <a href="/admin/dashboard"
+           class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors @Active("/admin/dashboard")">
+            <span>🏠</span> Dashboard
+        </a>
+
+        <div class="pt-3 pb-1">
+            <p class="text-indigo-400 text-xs uppercase font-semibold px-3">Yönetim</p>
+        </div>
+
+        <a href="/admin/users"
+           class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors @Active("/admin/users")">
+            <span>👥</span> Kullanıcılar
+        </a>
+
+        <a href="/admin/rates"
+           class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors @Active("/admin/rates")">
+            <span>💱</span> Döviz Kurları
+        </a>
+
+        <a href="/admin/alerts"
+           class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors @Active("/admin/alerts")">
+            <span>🔔</span> Alarmlar
+        </a>
+
+        <a href="/admin/notifications"
+           class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors @Active("/admin/notifications")">
+            <span>📢</span> Bildirimler
+        </a>
+    </nav>
+
+    <div class="px-4 py-3 border-t border-indigo-700">
+        <p class="text-indigo-400 text-xs text-center">v1.0.0 — RatePulse</p>
+    </div>
+</aside>

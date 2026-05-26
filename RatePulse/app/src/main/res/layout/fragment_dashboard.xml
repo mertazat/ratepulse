@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F3F4F6">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Anlık Kurlar"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#1F2937" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_refresh"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Yenile"
+                android:textSize="12sp"
+                app:cornerRadius="8dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_fetch_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yükleniyor..."
+            android:textSize="12sp"
+            android:textColor="#9CA3AF"
+            android:layout_marginBottom="16dp" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <!-- Kur Kartları 2x2 Grid -->
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:rowCount="2"
+            android:layout_marginBottom="16dp">
+
+            <include layout="@layout/item_rate_card" android:id="@+id/card_rate_1"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_columnWeight="1" android:layout_margin="4dp" />
+
+            <include layout="@layout/item_rate_card" android:id="@+id/card_rate_2"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_columnWeight="1" android:layout_margin="4dp" />
+
+            <include layout="@layout/item_rate_card" android:id="@+id/card_rate_3"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_columnWeight="1" android:layout_margin="4dp" />
+
+            <include layout="@layout/item_rate_card" android:id="@+id/card_rate_4"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_columnWeight="1" android:layout_margin="4dp" />
+
+        </GridLayout>
+
+        <!-- Grafik Kart -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tv_chart_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="USD/TRY — Geçmiş"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#1F2937"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Çift Seçici -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <Spinner android:id="@+id/spinner_from"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1" />
+
+                    <TextView android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" / "
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginHorizontal="4dp" />
+
+                    <Spinner android:id="@+id/spinner_to"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_apply_pair"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="Uygula"
+                        android:textSize="12sp"
+                        android:layout_marginStart="8dp"
+                        app:cornerRadius="8dp" />
+
+                </LinearLayout>
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/line_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</ScrollView>
